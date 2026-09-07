@@ -19,7 +19,7 @@ namespace SchoolDatabaseManager
             te24.AddStudent(student);
             te24.AddTeacher(teacher);
 
-            te24.RemoveStudent("Oscar F");
+            te24.RemoveStudent("Gustaf G");
 
             string connectionString = ConfigurationHelper.GetConnectionString("DefaultConnection");
 

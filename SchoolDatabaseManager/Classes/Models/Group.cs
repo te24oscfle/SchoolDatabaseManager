@@ -31,12 +31,12 @@ namespace SchoolDatabaseManager.Classes.Models
             students.Remove(student);
         }
 
-        public void RemoveStudent(string name)
+        public void RemoveStudent(string studentName)
         {
-            Student? student = students.FirstOrDefault(student => student.name == name);
+            Student? student = students.First(student => student.name == studentName);
 
             if (student == null)
-                throw new ArgumentException($"Could not find Student named {name} in Group {this.name}");
+                throw new ArgumentException($"Could not find Student named {studentName} in Group {name}");
 
             RemoveStudent(student);
         }
@@ -51,12 +51,12 @@ namespace SchoolDatabaseManager.Classes.Models
             teachers.Remove(teacher);
         }
 
-        public void RemoveTeacher(string name)
+        public void RemoveTeacher(string teacherName)
         {
-            Teacher? teacher = teachers.FirstOrDefault(teacher => teacher.name == name);
+            Teacher? teacher = teachers.First(teacher => teacher.name == teacherName);
 
             if (teacher == null)
-                throw new ArgumentException($"Could not find Teacher named {name} in Group {this.name}");
+                throw new ArgumentException($"Could not find Teacher named {teacherName} in Group {name}");
 
             RemoveTeacher(teacher);
         }
