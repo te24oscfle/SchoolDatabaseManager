@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace SchoolDatabaseManager
+namespace SchoolDatabaseManager.Helpers
 {
     public static class ConfigurationHelper
     {

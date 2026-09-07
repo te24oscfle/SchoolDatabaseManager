@@ -1,6 +1,7 @@
 ﻿
 
 using Npgsql;
+using SchoolDatabaseManager.Helpers;
 
 namespace SchoolDatabaseManager
 {
