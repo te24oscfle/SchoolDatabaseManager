@@ -11,15 +11,16 @@ namespace SchoolDatabaseManager
     {
         static async Task Main(string[] args)
         {
-            Student student = new Student("Oscar F");
+            Student student = new Student("Oscar Fleischer");
+            Student gustaf = new Student("Gustaf Gräftevall");
+
+            Console.WriteLine(gustaf.studentEmail);
             Teacher teacher = new Teacher("Sebastian L");
 
             Group te24 = new Group("TE24");
 
             te24.AddStudent(student);
             te24.AddTeacher(teacher);
-
-            te24.RemoveStudent("Gustaf G");
 
             string connectionString = ConfigurationHelper.GetConnectionString("DefaultConnection");
 

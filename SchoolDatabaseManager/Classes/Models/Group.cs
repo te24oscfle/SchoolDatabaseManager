@@ -33,7 +33,7 @@ namespace SchoolDatabaseManager.Classes.Models
 
         public void RemoveStudent(string studentName)
         {
-            Student? student = students.First(student => student.name == studentName);
+            Student? student = students.FirstOrDefault(student => student.name == studentName);
 
             if (student == null)
                 throw new ArgumentException($"Could not find Student named {studentName} in Group {name}");
@@ -53,7 +53,7 @@ namespace SchoolDatabaseManager.Classes.Models
 
         public void RemoveTeacher(string teacherName)
         {
-            Teacher? teacher = teachers.First(teacher => teacher.name == teacherName);
+            Teacher? teacher = teachers.FirstOrDefault(teacher => teacher.name == teacherName);
 
             if (teacher == null)
                 throw new ArgumentException($"Could not find Teacher named {teacherName} in Group {name}");
