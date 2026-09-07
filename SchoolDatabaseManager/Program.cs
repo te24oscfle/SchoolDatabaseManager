@@ -14,8 +14,9 @@ namespace SchoolDatabaseManager
             Student student = new Student("Oscar Fleischer");
             Student gustaf = new Student("Gustaf Gräftevall");
 
-            Console.WriteLine(gustaf.studentEmail);
             Teacher teacher = new Teacher("Sebastian L");
+
+            Console.WriteLine(teacher.teacherEmail);
 
             Group te24 = new Group("TE24");
 
