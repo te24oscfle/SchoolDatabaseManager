@@ -4,7 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 namespace SchoolDatabaseManager.Classes.Models
-{
+{   
     public class Teacher
     {
         public string name;
