@@ -40,6 +40,7 @@ namespace SchoolDatabaseManager
                 switch(command)
                 {
                     case "addStudent":
+                    {
                         string name = string.Join(" ", arguments);
                         if (string.IsNullOrEmpty(name))
                         {
@@ -47,24 +48,68 @@ namespace SchoolDatabaseManager
                             continue;
                         }
 
-                        students.Add(new Student(name));
-                        Console.WriteLine($"Added Student {name}");
+                        CommandHelpers.Add(students, args => new Student(string.Join(" ", args)), arguments);
                         break;
+                    }
 
                     case "getStudents":
-                        foreach (Student student in students)
-                        {
-                            Console.WriteLine($"{student.name} | {student.studentEmail}");
-                        }
+                    {
+                        CommandHelpers.Get(students);
                         break;
+                    }
+
+                    case "addTeacher":
+                    {
+                        string name = string.Join(" ", arguments);
+                        if (string.IsNullOrEmpty(name))
+                        {
+                            Console.WriteLine("Invalid name.");
+                            continue;
+                        }
+
+                        CommandHelpers.Add(teachers, args => new Teacher(string.Join(" ", args)), arguments);
+                        break;
+                    }
+
+                    case "getTeachers":
+                    {
+                        CommandHelpers.Get(teachers);
+                        break;
+                    } 
+                    
+
+                    case "addGroup":
+                    {
+                        string name = string.Join(" ", arguments);
+                        if (string.IsNullOrEmpty(name))
+                        {
+                            Console.WriteLine("Invalid name.");
+                            continue;
+                        }
+
+                        CommandHelpers.Add(groups, args => new Group(string.Join(" ", args)), arguments);
+                        break;
+                    }
+                       
+                    case "getGroups":
+                    {
+                        CommandHelpers.Get(groups);
+                        break;
+                    }
+                       
 
                     case "exit":
+                    {
                         shouldExit = true;
                         break;
+                    }
 
                     default:
+                    {
                         Console.WriteLine("Invalid command.");
                         break;
+                    }
+                        
                 }
             }
         }

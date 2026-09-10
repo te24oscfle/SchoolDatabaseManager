@@ -60,5 +60,10 @@ namespace SchoolDatabaseManager.Classes.Models
 
             RemoveTeacher(teacher);
         }
+
+        public override string ToString()
+        {
+            return name;
+        }
     }
 }
