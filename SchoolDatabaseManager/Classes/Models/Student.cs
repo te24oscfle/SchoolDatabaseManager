@@ -7,11 +7,13 @@ namespace SchoolDatabaseManager.Classes.Models
 {
     public class Student
     {
+        public int Id;
         public string Name;
         public string StudentEmail;
 
         public Student(string name)
         {
+            Id = -1;
             Name = name;
             StudentEmail = GetStudentEmail();
         }

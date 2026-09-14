@@ -16,7 +16,7 @@ namespace SchoolDatabaseManager.Helpers
 
             // Create the command
             using NpgsqlCommand command = new NpgsqlCommand(
-                "INSERT INTO students (name, studentEmail) VALUES (@name, @studentEmail)",
+                "INSERT INTO students (name, student_email) VALUES (@name, @studentEmail)",
                 connection
             );
 
