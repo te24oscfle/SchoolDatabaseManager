@@ -7,18 +7,18 @@ namespace SchoolDatabaseManager.Classes.Models
 {   
     public class Teacher
     {
-        public string name;
-        public string teacherEmail;
+        public string Name;
+        public string TeacherEmail;
 
         public Teacher(string name)
         {
-            this.name = name;
-            this.teacherEmail = GetTeacherEmail();
+            Name = name;
+            TeacherEmail = GetTeacherEmail();
         }
 
         private string GetTeacherEmail()
         {
-            string processedName = name.ToLower()
+            string processedName = Name.ToLower()
                 .Replace("å", "a")
                 .Replace("ä", "a")
                 .Replace("ö", "o"); // I should be doing something more robust here but this works
@@ -27,7 +27,7 @@ namespace SchoolDatabaseManager.Classes.Models
 
         public override string ToString()
         {
-            return $"{name} | {teacherEmail}";
+            return $"{Name} | {TeacherEmail}";
         }
     }
 }

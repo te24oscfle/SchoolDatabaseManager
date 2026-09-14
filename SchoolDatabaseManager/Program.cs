@@ -9,22 +9,12 @@ namespace SchoolDatabaseManager
 {
     internal class Program
     {
-        /*static async Task Main(string[] args)
-        {
-            string connectionString = ConfigurationHelper.GetConnectionString("DefaultConnection");
-
-            await using var connection = new NpgsqlConnection(connectionString);
-            await connection.OpenAsync();
-
-            Console.WriteLine($"PostgreSQL Version: {connection.PostgreSqlVersion}");
-        }*/
-
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             List<Student> students = new List<Student>();
             List<Teacher> teachers = new List<Teacher>();
             List<Group> groups = new List<Group>();
-             
+
             bool shouldExit = false;
             while (!shouldExit)
             {
@@ -47,8 +37,7 @@ namespace SchoolDatabaseManager
                             Console.WriteLine("Invalid name.");
                             continue;
                         }
-
-                        CommandHelpers.Add(students, args => new Student(string.Join(" ", args)), arguments);
+                        DatabaseManager.AddStudent(new Student(string.Join(" ", args)));
                         break;
                     }
 

@@ -6,15 +6,15 @@ namespace SchoolDatabaseManager.Classes.Models
 {
     public class Group
     {
-        public string name;
-        private List<Student> students;
-        private List<Teacher> teachers;
+        public string Name;
+        private List<Student> Students;
+        private List<Teacher> Teachers;
 
         public Group(string name, List<Student> students, List<Teacher> teachers)
         {
-            this.name = name;
-            this.students = students;
-            this.teachers = teachers;
+            Name = name;
+            Students = students;
+            Teachers = teachers;
         }
 
         public Group(string name) : this(name, new List<Student>(), new List<Teacher>()) { }
@@ -23,47 +23,47 @@ namespace SchoolDatabaseManager.Classes.Models
 
         public void AddStudent(Student student)
         {
-            students.Add(student);
+            Students.Add(student);
         }
 
         public void RemoveStudent(Student student)
         {
-            students.Remove(student);
+            Students.Remove(student);
         }
 
         public void RemoveStudent(string studentName)
         {
-            Student? student = students.FirstOrDefault(student => student.name == studentName);
+            Student? student = Students.FirstOrDefault(student => student.Name == studentName);
 
             if (student == null)
-                throw new ArgumentException($"Could not find Student named {studentName} in Group {name}");
+                throw new ArgumentException($"Could not find Student named {studentName} in Group {Name}");
 
             RemoveStudent(student);
         }
 
         public void AddTeacher(Teacher teacher)
         {
-            teachers.Add(teacher);
+            Teachers.Add(teacher);
         }
 
         public void RemoveTeacher(Teacher teacher)
         {
-            teachers.Remove(teacher);
+            Teachers.Remove(teacher);
         }
 
         public void RemoveTeacher(string teacherName)
         {
-            Teacher? teacher = teachers.FirstOrDefault(teacher => teacher.name == teacherName);
+            Teacher? teacher = Teachers.FirstOrDefault(teacher => teacher.Name == teacherName);
 
             if (teacher == null)
-                throw new ArgumentException($"Could not find Teacher named {teacherName} in Group {name}");
+                throw new ArgumentException($"Could not find Teacher named {teacherName} in Group {Name}");
 
             RemoveTeacher(teacher);
         }
 
         public override string ToString()
         {
-            return name;
+            return Name;
         }
     }
 }
