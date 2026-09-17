@@ -25,6 +25,7 @@ namespace SchoolDatabaseManager.Helpers
 
             // Execute the command
             command.ExecuteNonQuery();
+
             Console.WriteLine($"Added Student {student.Name} to the database.");
         }
     }

@@ -37,7 +37,7 @@ namespace SchoolDatabaseManager
                             Console.WriteLine("Invalid name.");
                             continue;
                         }
-                        DatabaseManager.AddStudent(new Student(string.Join(" ", args)));
+                        DatabaseManager.AddStudent(new Student(string.Join(" ", arguments)));
                         break;
                     }
 
