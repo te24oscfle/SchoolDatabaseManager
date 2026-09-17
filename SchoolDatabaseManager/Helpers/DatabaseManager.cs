@@ -69,6 +69,7 @@ namespace SchoolDatabaseManager.Helpers
             using NpgsqlCommand command = new NpgsqlCommand(
                 """
                 SELECT * FROM students
+                ORDER BY id ASC
                 """,
                 connection
             );
