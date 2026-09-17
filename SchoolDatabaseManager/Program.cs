@@ -45,11 +45,21 @@ namespace SchoolDatabaseManager
                             Console.WriteLine(student.Name);
                             Console.WriteLine($"    ID={student.Id}");
                             Console.WriteLine($"    Student Email={student.StudentEmail}");
+                            Console.WriteLine($"    Group ID={student.GroupId}");
                             Console.Write("\n");
                         }
                             
                         break;
                     }
+
+                    case "assignStudentToGroup":
+                        {
+                            int.TryParse(arguments[0], out int studentId);
+                            int.TryParse(arguments[1], out int groupId);
+                            DatabaseManager.AssignStudentToGroup(studentId, groupId);
+                            break;
+
+                        }
 
                     case "addTeacher":
                     {
@@ -77,6 +87,9 @@ namespace SchoolDatabaseManager
                             Console.WriteLine("Invalid name.");
                             continue;
                         }
+
+                        Group group = new Group(name);
+                        DatabaseManager.AddGroup(group);
 
                         break;
                     }

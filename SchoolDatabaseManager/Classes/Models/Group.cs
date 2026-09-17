@@ -6,20 +6,21 @@ namespace SchoolDatabaseManager.Classes.Models
 {
     public class Group
     {
+        public int Id;
         public string Name;
         private List<Student> Students;
         private List<Teacher> Teachers;
 
-        public Group(string name, List<Student> students, List<Teacher> teachers)
+        public Group(string name, int id)
         {
             Name = name;
-            Students = students;
-            Teachers = teachers;
+            Id = id;
+
+            Students = new List<Student>();
+            Teachers = new List<Teacher>();
         }
 
-        public Group(string name) : this(name, new List<Student>(), new List<Teacher>()) { }
-        public Group(string name, List<Student> students) : this(name, students, new List<Teacher>()) { }
-        public Group(string name, List<Teacher> teachers) : this(name, new List<Student>(), teachers) { }
+        public Group(string name) : this(name, -1) { }
 
         public void AddStudent(Student student)
         {
