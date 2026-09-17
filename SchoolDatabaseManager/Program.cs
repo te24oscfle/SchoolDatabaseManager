@@ -11,10 +11,6 @@ namespace SchoolDatabaseManager
     {
         static async Task Main(string[] args)
         {
-            List<Student> students = new List<Student>();
-            List<Teacher> teachers = new List<Teacher>();
-            List<Group> groups = new List<Group>();
-
             bool shouldExit = false;
             while (!shouldExit)
             {
@@ -43,7 +39,15 @@ namespace SchoolDatabaseManager
 
                     case "getStudents":
                     {
-                        CommandHelpers.Get(students);
+                        List<Student> students = DatabaseManager.GetStudents();
+                        foreach(Student student in students)
+                        {
+                            Console.WriteLine(student.Name);
+                            Console.WriteLine($"    ID={student.Id}");
+                            Console.WriteLine($"    Student Email={student.StudentEmail}");
+                            Console.Write("\n");
+                        }
+                            
                         break;
                     }
 
@@ -56,13 +60,11 @@ namespace SchoolDatabaseManager
                             continue;
                         }
 
-                        CommandHelpers.Add(teachers, args => new Teacher(string.Join(" ", args)), arguments);
                         break;
                     }
 
                     case "getTeachers":
                     {
-                        CommandHelpers.Get(teachers);
                         break;
                     } 
                     
@@ -76,13 +78,11 @@ namespace SchoolDatabaseManager
                             continue;
                         }
 
-                        CommandHelpers.Add(groups, args => new Group(string.Join(" ", args)), arguments);
                         break;
                     }
                        
                     case "getGroups":
                     {
-                        CommandHelpers.Get(groups);
                         break;
                     }
                        

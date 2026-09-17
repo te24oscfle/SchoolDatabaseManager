@@ -18,6 +18,13 @@ namespace SchoolDatabaseManager.Classes.Models
             StudentEmail = GetStudentEmail();
         }
 
+        public Student(int id, string name, string studentEmail)
+        {
+            Id = id;
+            Name = name;
+            StudentEmail = studentEmail;
+        }
+
         private string GetStudentEmail()
         {
             string processedName = Name.ToLower()
