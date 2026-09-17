@@ -7,28 +7,37 @@ namespace SchoolDatabaseManager.Helpers
 {
     public static class DatabaseManager
     {
-        public static void AddStudent(Student student)
+        private static NpgsqlCommand GetCommand(string command)
         {
-            // Open a connection
             string connectionString = ConfigurationHelper.GetConnectionString("DefaultConnection");
             using var connection = new NpgsqlConnection(connectionString);
             connection.Open();
 
             // Create the command
-            using NpgsqlCommand command = new NpgsqlCommand(
+            using NpgsqlCommand sqlCommand = new NpgsqlCommand(
+                command,
+                connection
+            );
+
+            return sqlCommand;
+        }
+        
+        public static void AddStudent(Student student)
+        {
+            // Open a connection
+            NpgsqlCommand command = GetCommand(
                 """
                 INSERT INTO students (name, student_email)
                 VALUES (@name, @studentEmail)
                 RETURNING id
-                """,
-                connection
+                """
             );
             
             // Insert values into command
             command.Parameters.AddWithValue("name", student.Name);
             command.Parameters.AddWithValue("studentEmail", student.StudentEmail);
 
-            // Execute the command and get the ID
+            // Execute the command and get the ID. If no valid ID exists, the student is giving a temp -1 id.
             student.Id = command.ExecuteScalar() is int id ? id : -1;
 
             Console.WriteLine($"Added Student {student.Name} to the database. (ID={student.Id})");
@@ -36,17 +45,11 @@ namespace SchoolDatabaseManager.Helpers
 
         public static List<Student> GetStudents()
         {
-            // Open a connection
-            string connectionString = ConfigurationHelper.GetConnectionString("DefaultConnection");
-            using var connection = new NpgsqlConnection(connectionString);
-            connection.Open();
-
-            // Create command
-            using NpgsqlCommand command = new NpgsqlCommand(
+            // Get command
+            NpgsqlCommand command = GetCommand(
                 """
                 SELECT * FROM students;
-                """,
-                connection
+                """
             );
 
             // Get reader object
