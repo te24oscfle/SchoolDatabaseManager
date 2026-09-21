@@ -10,19 +10,22 @@ namespace SchoolDatabaseManager.Classes.Models
         public int Id;
         public string Name;
         public string TeacherEmail;
+        public int GroupId;
 
         public Teacher(string name)
         {
             Id = -1;
             Name = name;
             TeacherEmail = GetTeacherEmail();
+            GroupId = -1;
         }
 
-        public Teacher(int id, string name, string teacherEmail)
+        public Teacher(int id, string name, string teacherEmail, int groupId)
         {
             Id = id;
             Name = name;
             TeacherEmail = teacherEmail;
+            GroupId = groupId;
         }
 
         private string GetTeacherEmail()

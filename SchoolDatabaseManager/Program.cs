@@ -102,6 +102,14 @@ namespace SchoolDatabaseManager
                         break;
                     }
 
+                    case "assignTeacherToGroup":
+                    {
+                        int.TryParse(arguments[0], out int teacherId);
+                        int.TryParse(arguments[1], out int groupId);
+                        DatabaseManager.AssignTeacherToGroup(teacherId, groupId);
+                        break;
+                    }
+
                     case "getTeachers":
                     {
                         break;

@@ -106,8 +106,7 @@ namespace SchoolDatabaseManager.Helpers
                 int id = reader.GetInt32(reader.GetOrdinal("id"));
                 string name = reader.GetString(reader.GetOrdinal("name"));
                 string studentEmail = reader.GetString(reader.GetOrdinal("student_email"));
-                int groupId = reader.IsDBNull(reader.GetOrdinal("group_id")) ? -1 : reader.GetInt32(reader.GetOrdinal("group_id"));
-
+                int groupId = reader.GetInt32(reader.GetOrdinal("group_id"));
 
                 Student student = new Student(id, name, studentEmail, groupId);
                 students.Add(student);
@@ -163,6 +162,25 @@ namespace SchoolDatabaseManager.Helpers
             Console.WriteLine($"Removed Teacher with ID={teacherId} from the database.");
         }
 
+        public static void AssignTeacherToGroup(int teacherId, int groupId)
+        {
+            using var connection = GetConnection();
+            using var command = new NpgsqlCommand(
+                """
+                UPDATE teachers
+                SET group_id = @group_id
+                WHERE id = @teacher_id
+                """,
+                connection
+            );
+
+            command.Parameters.AddWithValue("group_id", groupId);
+            command.Parameters.AddWithValue("teacher_id", teacherId);
+
+            command.ExecuteNonQuery();
+            Console.WriteLine($"Assigned Teacher with ID={teacherId} to Group with ID={groupId}.");
+        }
+
         // =========================================================
         // === GROUPS
         // =========================================================
@@ -216,13 +234,48 @@ namespace SchoolDatabaseManager.Helpers
                 int id = reader.GetInt32(reader.GetOrdinal("id"));
                 string name = reader.GetString(reader.GetOrdinal("name"));
                 string studentEmail = reader.GetString(reader.GetOrdinal("student_email"));
-                int studentGroupId = reader.IsDBNull(reader.GetOrdinal("group_id")) ? -1 : reader.GetInt32(reader.GetOrdinal("group_id"));
+                int studentGroupId = reader.GetInt32(reader.GetOrdinal("group_id"));
 
                 Student student = new Student(id, name, studentEmail, studentGroupId);
                 students.Add(student);
             }
 
             return students;
+        }
+
+        public static List<Teacher> GetTeachersInGroup(int groupId)
+        {
+            // Get command
+            using var connection = GetConnection();
+
+            using var command = new NpgsqlCommand(
+                """
+                    SELECT * FROM teachers
+                    WHERE group_id = @group_id
+                    ORDER BY id ASC
+                """,
+                connection
+            );
+
+            command.Parameters.AddWithValue("group_id", groupId);
+
+            // Get reader object
+            using NpgsqlDataReader reader = command.ExecuteReader();
+
+            // Read all rows and create students
+            List<Teacher> teachers = new List<Teacher>();
+            while (reader.Read())
+            {
+                int id = reader.GetInt32(reader.GetOrdinal("id"));
+                string name = reader.GetString(reader.GetOrdinal("name"));
+                string teacherEmail = reader.GetString(reader.GetOrdinal("student_email"));
+                int studentGroupId = reader.GetInt32(reader.GetOrdinal("group_id"));
+
+                Teacher teacher = new Teacher(id, name, teacherEmail, studentGroupId);
+                teachers.Add(teacher);
+            }
+
+            return teachers;
         }
     }
 }
