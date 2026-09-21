@@ -100,8 +100,30 @@ namespace SchoolDatabaseManager.Helpers
         // =========================================================
         // === TEACHERS
         // =========================================================
-        
-         
+
+        public static void AddTeacher(Teacher teacher)
+        {
+            // Open a connection
+            using var connection = GetConnection();
+
+            using NpgsqlCommand command = new NpgsqlCommand(
+                """
+                INSERT INTO teachers (name, teacher_email)
+                VALUES (@name, @teacher_email)
+                RETURNING id
+                """,
+                connection
+            );
+
+            // Insert values into command
+            command.Parameters.AddWithValue("name", teacher.Name);
+            command.Parameters.AddWithValue("teacher_email", teacher.TeacherEmail);
+
+            // Execute the command and get the ID. If no valid ID exists, the student is giving a temp -1 id.
+            teacher.Id = command.ExecuteScalar() is int id ? id : -1;
+
+            Console.WriteLine($"Added Teacher {teacher.Name} to the database. (ID={teacher.Id})");
+        }
 
         // =========================================================
         // === GROUPS
