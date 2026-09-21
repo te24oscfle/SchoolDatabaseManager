@@ -37,6 +37,13 @@ namespace SchoolDatabaseManager
                         break;
                     }
 
+                    case "removeStudent":
+                    {
+                        int.TryParse(arguments[0], out int studentId);
+                        DatabaseManager.RemoveStudent(studentId);
+                        break;
+                    }
+
                     case "getStudents":
                     {
                         List<Student> students = DatabaseManager.GetStudents();

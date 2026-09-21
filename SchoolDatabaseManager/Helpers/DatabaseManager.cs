@@ -43,6 +43,25 @@ namespace SchoolDatabaseManager.Helpers
             Console.WriteLine($"Added Student {student.Name} to the database. (ID={student.Id})");
         }
 
+        public static void RemoveStudent(int studentId)
+        {
+            // Open a connection
+            using var connection = GetConnection();
+
+            using NpgsqlCommand command = new NpgsqlCommand(
+                """
+                DELETE FROM students
+                WHERE id = @student_id;
+                """,
+                connection
+            );
+
+            command.Parameters.AddWithValue("student_id", studentId);
+
+            command.ExecuteNonQuery();
+            Console.WriteLine($"Removed Student with ID={studentId} from the database.");
+        }
+
         public static void AssignStudentToGroup(int studentId, int groupId)
         {
             using var connection = GetConnection();
@@ -141,7 +160,6 @@ namespace SchoolDatabaseManager.Helpers
             command.Parameters.AddWithValue("teacher_id", teacherId);
 
             command.ExecuteNonQuery();
-
             Console.WriteLine($"Removed Teacher with ID={teacherId} from the database.");
         }
 
