@@ -52,6 +52,21 @@ namespace SchoolDatabaseManager
                         break;
                     }
 
+                    case "getStudentsInGroup":
+                    {
+                        int.TryParse(arguments[0], out int groupId);
+                        List<Student> students = DatabaseManager.GetStudentsInGroup(groupId);
+                        foreach (Student student in students)
+                        {
+                            Console.WriteLine(student.Name);
+                            Console.WriteLine($"    ID={student.Id}");
+                            Console.WriteLine($"    Student Email={student.StudentEmail}");
+                            Console.Write("\n");
+                        }
+
+                        break;
+                    }
+
                     case "assignStudentToGroup":
                         {
                             int.TryParse(arguments[0], out int studentId);
@@ -69,9 +84,9 @@ namespace SchoolDatabaseManager
                             Console.WriteLine("Invalid name.");
                             continue;
                         }
-
+                        DatabaseManager.AddTeacher(new Teacher(string.Join(" ", arguments)));
                         break;
-                    }
+                        }
 
                     case "getTeachers":
                     {

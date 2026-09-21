@@ -15,7 +15,10 @@ namespace SchoolDatabaseManager.Helpers
 
             return connection;
         }
-        
+
+        // =========================================================
+        // === STUDENTS
+        // =========================================================
         public static void AddStudent(Student student)
         {
             // Open a connection
@@ -94,6 +97,16 @@ namespace SchoolDatabaseManager.Helpers
             return students;
         }
 
+        // =========================================================
+        // === TEACHERS
+        // =========================================================
+        
+         
+
+        // =========================================================
+        // === GROUPS
+        // =========================================================
+
         public static void AddGroup(Group group)
         {
             // Get command
@@ -115,6 +128,41 @@ namespace SchoolDatabaseManager.Helpers
             group.Id = command.ExecuteScalar() is int id ? id : -1;
 
             Console.WriteLine($"Added Group {group.Name} to the database. (ID={group.Id})");
+        }
+
+        public static List<Student> GetStudentsInGroup(int groupId)
+        {
+            // Get command
+            using var connection = GetConnection();
+
+            using var command = new NpgsqlCommand(
+                """
+                    SELECT * FROM students
+                    WHERE group_id = @group_id
+                    ORDER BY id ASC
+                """,
+                connection
+            );
+
+            command.Parameters.AddWithValue("group_id", groupId);
+
+            // Get reader object
+            using NpgsqlDataReader reader = command.ExecuteReader();
+
+            // Read all rows and create students
+            List<Student> students = new List<Student>();
+            while (reader.Read())
+            {
+                int id = reader.GetInt32(reader.GetOrdinal("id"));
+                string name = reader.GetString(reader.GetOrdinal("name"));
+                string studentEmail = reader.GetString(reader.GetOrdinal("student_email"));
+                int studentGroupId = reader.IsDBNull(reader.GetOrdinal("group_id")) ? -1 : reader.GetInt32(reader.GetOrdinal("group_id"));
+
+                Student student = new Student(id, name, studentEmail, studentGroupId);
+                students.Add(student);
+            }
+
+            return students;
         }
     }
 }
