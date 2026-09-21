@@ -86,7 +86,14 @@ namespace SchoolDatabaseManager
                         }
                         DatabaseManager.AddTeacher(new Teacher(string.Join(" ", arguments)));
                         break;
-                        }
+                    }
+
+                    case "removeTeacher":
+                    {
+                        int.TryParse(arguments[0], out int teacherId);
+                        DatabaseManager.RemoveTeacher(teacherId);
+                        break;
+                    }
 
                     case "getTeachers":
                     {

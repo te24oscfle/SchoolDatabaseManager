@@ -125,6 +125,26 @@ namespace SchoolDatabaseManager.Helpers
             Console.WriteLine($"Added Teacher {teacher.Name} to the database. (ID={teacher.Id})");
         }
 
+        public static void RemoveTeacher(int teacherId)
+        {
+            // Open a connection
+            using var connection = GetConnection();
+
+            using NpgsqlCommand command = new NpgsqlCommand(
+                """
+                DELETE FROM teachers
+                WHERE id = @teacher_id;
+                """,
+                connection
+            );
+
+            command.Parameters.AddWithValue("teacher_id", teacherId);
+
+            command.ExecuteNonQuery();
+
+            Console.WriteLine($"Removed Teacher with ID={teacherId} from the database.");
+        }
+
         // =========================================================
         // === GROUPS
         // =========================================================
