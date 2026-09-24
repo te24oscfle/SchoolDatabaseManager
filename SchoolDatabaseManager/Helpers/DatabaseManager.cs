@@ -1,7 +1,9 @@
 ﻿using Npgsql;
-using SchoolDatabaseManager.Helpers;
 using SchoolDatabaseManager.Classes;
 using SchoolDatabaseManager.Classes.Models;
+using SchoolDatabaseManager.Helpers;
+using System.Text.RegularExpressions;
+using Group = SchoolDatabaseManager.Classes.Models.Group;
 
 namespace SchoolDatabaseManager.Helpers
 {
@@ -282,7 +284,7 @@ namespace SchoolDatabaseManager.Helpers
 
             return teachers;
         }
-        
+
         // =========================================================
         // === GROUPS
         // =========================================================
@@ -310,6 +312,32 @@ namespace SchoolDatabaseManager.Helpers
             Console.WriteLine($"Added Group {group.Name} to the database. (ID={group.Id})");
         }
 
-        
+        public static List<Group> GetGroups()
+        {
+            using var connection = GetConnection();
+
+            using NpgsqlCommand command = new NpgsqlCommand(
+                """
+                SELECT * FROM groups
+                ORDER BY id ASC
+                """, connection);
+
+            // Get reader object
+            using NpgsqlDataReader reader = command.ExecuteReader();
+
+            // Read all rows and create students
+            List<Group> groups = new List<Group>();
+            while (reader.Read())
+            {
+                int id = reader.GetInt32(reader.GetOrdinal("id"));
+                string name = reader.GetString(reader.GetOrdinal("name"));
+
+                Group group = new Group(name, id);
+                groups.Add(group);
+            }
+
+            return groups;
+        }
+
     }
 }

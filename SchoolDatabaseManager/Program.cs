@@ -38,6 +38,16 @@ namespace SchoolDatabaseManager
             }
         }
 
+        static void PrintGroups(List<Group> groups)
+        {
+            foreach (Group group in groups)
+            {
+                Console.WriteLine(group.Name);
+                Console.WriteLine($"    ID={group.Id}");
+                Console.Write("\n");
+            }
+        }
+
         static void Main(string[] args)
         {
             bool shouldExit = false;
@@ -57,8 +67,8 @@ namespace SchoolDatabaseManager
                 // primaryId and secondaryId was previously student/teacherId and groupId respectively. '
                 // I moved the int.TryParse calls out of the switch cases to refactorise the code.
                 // This system assums groupId is always the second argument, but some command take a group id as the first command.
-                // To solve this, they are renamed to primaryId and secondaryId. This honestly sucks for readability, but 
-                // everything about this sucks, so whatever.
+                
+                // To solve this, they are renamed to primaryId and secondaryId.
 
                 // Checks if arguments is greater than 0. If it is, it will try to parse the int to a temp variable
                 // If the temp variable exists, primaryId will be equal to that. Otherwise, it is set to 0.
@@ -71,7 +81,6 @@ namespace SchoolDatabaseManager
                     ? parsedSecondaryId
                     : 0;
                 
-
                 switch (command)
                 {
                     // =============================
@@ -164,13 +173,14 @@ namespace SchoolDatabaseManager
                             Console.WriteLine("Invalid name.");
                             continue;
                         }
-                        Group group = new Group(name);
-                        DatabaseManager.AddGroup(group);
+                        DatabaseManager.AddGroup(new Group(name));
                         break;
                     }
                        
                     case "getGroups":
                     {
+                        List<Group> groups = DatabaseManager.GetGroups();
+                        PrintGroups(groups);
                         break;
                     }
 
