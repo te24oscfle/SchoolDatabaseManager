@@ -25,6 +25,7 @@ namespace SchoolDatabaseManager
 
                 switch(command)
                 {
+                    // Stuents
                     case "addStudent":
                     {
                         string name = string.Join(" ", arguments);
@@ -75,14 +76,14 @@ namespace SchoolDatabaseManager
                     }
 
                     case "assignStudentToGroup":
-                        {
-                            int.TryParse(arguments[0], out int studentId);
-                            int.TryParse(arguments[1], out int groupId);
-                            DatabaseManager.AssignStudentToGroup(studentId, groupId);
-                            break;
-
-                        }
-
+                    {
+                        int.TryParse(arguments[0], out int studentId);
+                        int.TryParse(arguments[1], out int groupId);
+                        DatabaseManager.AssignStudentToGroup(studentId, groupId);
+                        break;
+                    }
+                    
+                    // Teachers
                     case "addTeacher":
                     {
                         string name = string.Join(" ", arguments);
@@ -112,9 +113,32 @@ namespace SchoolDatabaseManager
 
                     case "getTeachers":
                     {
+                        List<Teacher> teachers = DatabaseManager.GetTeachers();
+                        foreach (Teacher student in teachers)
+                        {
+                            Console.WriteLine(student.Name);
+                            Console.WriteLine($"    ID={student.Id}");
+                            Console.WriteLine($"    Teacher Email={student.TeacherEmail}");
+                            Console.WriteLine($"    Group ID={student.GroupId}");
+                            Console.Write("\n");
+                        }
                         break;
-                    } 
-                    
+                    }
+
+                    case "getTeachersInGroup":
+                        {
+                            int.TryParse(arguments[0], out int groupId);
+                            List<Teacher> teachers = DatabaseManager.GetTeachersInGroup(groupId);
+                            foreach (Teacher teacher in teachers)
+                            {
+                                Console.WriteLine(teacher.Name);
+                                Console.WriteLine($"    ID={teacher.Id}");
+                                Console.WriteLine($"    Student Email={teacher.TeacherEmail}");
+                                Console.Write("\n");
+                            }
+
+                            break;
+                        }
 
                     case "addGroup":
                     {

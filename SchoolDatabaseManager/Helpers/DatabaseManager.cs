@@ -106,9 +106,44 @@ namespace SchoolDatabaseManager.Helpers
                 int id = reader.GetInt32(reader.GetOrdinal("id"));
                 string name = reader.GetString(reader.GetOrdinal("name"));
                 string studentEmail = reader.GetString(reader.GetOrdinal("student_email"));
-                int groupId = reader.GetInt32(reader.GetOrdinal("group_id"));
+                int groupId = reader.IsDBNull(reader.GetOrdinal("group_id")) ? -1 : reader.GetInt32(reader.GetOrdinal("group_id"));
 
                 Student student = new Student(id, name, studentEmail, groupId);
+                students.Add(student);
+            }
+
+            return students;
+        }
+
+        public static List<Student> GetStudentsInGroup(int groupId)
+        {
+            // Get command
+            using var connection = GetConnection();
+
+            using var command = new NpgsqlCommand(
+                """
+                    SELECT * FROM students
+                    WHERE group_id = @group_id
+                    ORDER BY id ASC
+                """,
+                connection
+            );
+
+            command.Parameters.AddWithValue("group_id", groupId);
+
+            // Get reader object
+            using NpgsqlDataReader reader = command.ExecuteReader();
+
+            // Read all rows and create students
+            List<Student> students = new List<Student>();
+            while (reader.Read())
+            {
+                int id = reader.GetInt32(reader.GetOrdinal("id"));
+                string name = reader.GetString(reader.GetOrdinal("name"));
+                string studentEmail = reader.GetString(reader.GetOrdinal("student_email"));
+                int studentGroupId = reader.GetInt32(reader.GetOrdinal("group_id"));
+
+                Student student = new Student(id, name, studentEmail, studentGroupId);
                 students.Add(student);
             }
 
@@ -181,66 +216,36 @@ namespace SchoolDatabaseManager.Helpers
             Console.WriteLine($"Assigned Teacher with ID={teacherId} to Group with ID={groupId}.");
         }
 
-        // =========================================================
-        // === GROUPS
-        // =========================================================
-
-        public static void AddGroup(Group group)
+        public static List<Teacher> GetTeachers()
         {
             // Get command
             using var connection = GetConnection();
 
-            using var command = new NpgsqlCommand(
+            using NpgsqlCommand command = new NpgsqlCommand(
                 """
-                    INSERT INTO groups (name)
-                    VALUES (@name)
-                    RETURNING id
+                SELECT * FROM teachers
+                ORDER BY id ASC
                 """,
                 connection
             );
-
-            // Insert values into command
-            command.Parameters.AddWithValue("name", group.Name);
-
-            // Execute the command and get the ID. If no valid ID exists, the student is giving a temp -1 id.
-            group.Id = command.ExecuteScalar() is int id ? id : -1;
-
-            Console.WriteLine($"Added Group {group.Name} to the database. (ID={group.Id})");
-        }
-
-        public static List<Student> GetStudentsInGroup(int groupId)
-        {
-            // Get command
-            using var connection = GetConnection();
-
-            using var command = new NpgsqlCommand(
-                """
-                    SELECT * FROM students
-                    WHERE group_id = @group_id
-                    ORDER BY id ASC
-                """,
-                connection
-            );
-
-            command.Parameters.AddWithValue("group_id", groupId);
 
             // Get reader object
             using NpgsqlDataReader reader = command.ExecuteReader();
 
             // Read all rows and create students
-            List<Student> students = new List<Student>();
+            List<Teacher> teachers = new List<Teacher>();
             while (reader.Read())
             {
                 int id = reader.GetInt32(reader.GetOrdinal("id"));
                 string name = reader.GetString(reader.GetOrdinal("name"));
-                string studentEmail = reader.GetString(reader.GetOrdinal("student_email"));
-                int studentGroupId = reader.GetInt32(reader.GetOrdinal("group_id"));
+                string teacherEmail = reader.GetString(reader.GetOrdinal("teacher_email"));
+                int groupId = reader.IsDBNull(reader.GetOrdinal("group_id")) ? -1 : reader.GetInt32(reader.GetOrdinal("group_id"));
 
-                Student student = new Student(id, name, studentEmail, studentGroupId);
-                students.Add(student);
+                Teacher teacher = new Teacher(id, name, teacherEmail, groupId);
+                teachers.Add(teacher);
             }
 
-            return students;
+            return teachers;
         }
 
         public static List<Teacher> GetTeachersInGroup(int groupId)
@@ -268,7 +273,7 @@ namespace SchoolDatabaseManager.Helpers
             {
                 int id = reader.GetInt32(reader.GetOrdinal("id"));
                 string name = reader.GetString(reader.GetOrdinal("name"));
-                string teacherEmail = reader.GetString(reader.GetOrdinal("student_email"));
+                string teacherEmail = reader.GetString(reader.GetOrdinal("teacher_email"));
                 int studentGroupId = reader.GetInt32(reader.GetOrdinal("group_id"));
 
                 Teacher teacher = new Teacher(id, name, teacherEmail, studentGroupId);
@@ -277,5 +282,34 @@ namespace SchoolDatabaseManager.Helpers
 
             return teachers;
         }
+        
+        // =========================================================
+        // === GROUPS
+        // =========================================================
+
+        public static void AddGroup(Group group)
+        {
+            // Get command
+            using var connection = GetConnection();
+
+            using var command = new NpgsqlCommand(
+                """
+                    INSERT INTO groups (name)
+                    VALUES (@name)
+                    RETURNING id
+                """,
+                connection
+            );
+
+            // Insert values into command
+            command.Parameters.AddWithValue("name", group.Name);
+
+            // Execute the command and get the ID. If no valid ID exists, the student is giving a temp -1 id.
+            group.Id = command.ExecuteScalar() is int id ? id : -1;
+
+            Console.WriteLine($"Added Group {group.Name} to the database. (ID={group.Id})");
+        }
+
+        
     }
 }
