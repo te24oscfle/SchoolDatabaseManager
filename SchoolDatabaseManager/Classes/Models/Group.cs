@@ -20,7 +20,7 @@ namespace SchoolDatabaseManager.Classes.Models
             Teachers = new List<Teacher>();
         }
 
-        public Group(string name) : this(name, -1) { }
+        public Group(string name) : this(name, 0) { }
 
         public void AddStudent(Student student)
         {

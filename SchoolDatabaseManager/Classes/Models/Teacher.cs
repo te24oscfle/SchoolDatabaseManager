@@ -14,10 +14,10 @@ namespace SchoolDatabaseManager.Classes.Models
 
         public Teacher(string name)
         {
-            Id = -1;
+            Id = 0;
             Name = name;
             TeacherEmail = GetTeacherEmail();
-            GroupId = -1;
+            GroupId = 0;
         }
 
         public Teacher(int id, string name, string teacherEmail, int groupId)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SchoolDatabaseManager.Classes.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,17 +7,15 @@ namespace SchoolDatabaseManager.Commands
 {
     public static class CommandHelpers
     {
-        public static void Add<T>(List<T> items, Func<string[], T> factory, string[] arguments)
+        public static void PrintStudents(List<Student> students)
         {
-            T item = factory(arguments);
-            items.Add(item);
-        }
-
-        public static void Get<T>(List<T> items)
-        {
-            foreach(T item in items)
+            foreach (Student student in students)
             {
-                Console.WriteLine(item);
+                Console.WriteLine(student.Name);
+                Console.WriteLine($"    ID={student.Id}");
+                Console.WriteLine($"    Student Email={student.StudentEmail}");
+                Console.WriteLine($"    Group ID={student.GroupId}");
+                Console.Write("\n");
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using SchoolDatabaseManager.Classes.Models;
+using System.Data.Common;
 
 namespace SchoolDatabaseManager.Database
 {
@@ -154,6 +155,13 @@ namespace SchoolDatabaseManager.Database
             catch (Exception exception)
             {
                 Console.WriteLine($"Error when executing following SQL command:\n{command.CommandText}");
+
+                Console.WriteLine($"\nParamaters:");
+                foreach(SqliteParameter paramater in command.Parameters)
+                {
+                    Console.WriteLine($"\t{paramater.ParameterName}: {paramater.Value}");
+                }
+
                 Console.WriteLine($"\n{exception}\n");
                 return false;
             }

@@ -10,8 +10,8 @@ namespace SchoolDatabaseManager.Database
             bool success = DatabaseHelper.Write
             (
                 """
-                INSERT INTO students
-                VALUES (name, student_email, group_id)
+                INSERT INTO students (name, student_email, group_id)
+                VALUES (@name, @student_email, @group_id)
                 """,
                 command => DatabaseHelper.WriteStudent(command, student)
             );
@@ -25,9 +25,9 @@ namespace SchoolDatabaseManager.Database
             (
                 """
                 DELETE FROM students
-                WHERE student_id = @student_id
+                WHERE id = @id
                 """,
-                command => command.Parameters.AddWithValue("student_id", studentId)
+                command => command.Parameters.AddWithValue("id", studentId)
             );
             if (success)
                 Console.WriteLine($"Removed Student with ID={studentId} from the database.");
@@ -40,12 +40,12 @@ namespace SchoolDatabaseManager.Database
                 """
                 UPDATE students
                 SET group_id = @group_id
-                WHERE student_id = @student_id
+                WHERE id = @id
                 """,
                 command => 
                 {
                     command.Parameters.AddWithValue("group_id", groupId);
-                    command.Parameters.AddWithValue("student_id", studentId);
+                    command.Parameters.AddWithValue("id", studentId);
                 }
             );
             if (success)
@@ -85,8 +85,8 @@ namespace SchoolDatabaseManager.Database
             bool success = DatabaseHelper.Write
             (
                 """
-                INSERT INTO teachers
-                VALUES (name, teacher_email, group_id)
+                INSERT INTO teachers (name, teacher_email, group_id)
+                VALUES (@name, @teacher_email, @group_id)
                 """,
                 command => DatabaseHelper.WriteTeacher(command, teacher)
             );

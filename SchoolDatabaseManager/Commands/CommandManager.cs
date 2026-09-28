@@ -9,10 +9,22 @@ namespace SchoolDatabaseManager.Commands
         {
             return new Dictionary<string, Action<string[]>>
             {
-                {"addStudent", AddStudent }
+                // Student Commands
+                {"addStudent", AddStudent },
+                {"removeStudent", RemoveStudent },
+                {"assignStudentToGroup", AssignStudentToGroup },
+                {"getStudents", GetStudents },
+                {"getStudentsInGroup", GetStudentsInGroup },
+
+                // Teacher Commands
+
+
+                // Group Commands
 
             };
         }
+
+        #region Student Commands
 
         public static void AddStudent(string[] arguments)
         {
@@ -20,17 +32,58 @@ namespace SchoolDatabaseManager.Commands
             DatabaseManager.AddStudent(new Student(name));
         }
 
+        public static void RemoveStudent(string[] arguments)
+        {
+            if (arguments.Length == 0)
+            {
+                Console.WriteLine("No Student ID was provided.");
+                return;
+            }
+                
+            int.TryParse(arguments[0], out int studentId);
+            DatabaseManager.RemoveStudent(studentId);
+        }
+
+        public static void AssignStudentToGroup(string[] arguments)
+        {
+            if (arguments.Length < 1)
+            {
+                Console.WriteLine("No Student ID was provided.");
+                return;
+            }
+
+            if (arguments.Length < 2)
+            {
+                Console.WriteLine("No Group ID was provided.");
+                return;
+            }
+
+            int.TryParse(arguments[0], out int studentId);
+            int.TryParse(arguments[1], out int groupId);
+
+            DatabaseManager.AssignStudentToGroup(studentId, groupId);
+        }
+
         public static void GetStudents(string[] arguments) 
         {
             List<Student> students = DatabaseManager.GetStudents();
-            foreach (Student student in students)
-            {
-                Console.WriteLine(student.Name);
-                Console.WriteLine($"    ID={student.Id}");
-                Console.WriteLine($"    Student Email={student.StudentEmail}");
-                Console.WriteLine($"    Group ID={student.GroupId}");
-                Console.Write("\n");
-            }
+            CommandHelpers.PrintStudents(students);
         }
+
+        public static void GetStudentsInGroup(string[] arguments)
+        {
+            if (arguments.Length == 0)
+            {
+                Console.WriteLine("No Group ID was provided.");
+                return;
+            }
+
+            int.TryParse(arguments[0], out int groupId);
+
+            List<Student> students = DatabaseManager.GetStudentsInGroup(groupId);
+            CommandHelpers.PrintStudents(students);
+        }
+
+        #endregion
     }
 }
