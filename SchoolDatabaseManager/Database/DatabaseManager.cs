@@ -6,9 +6,7 @@ namespace SchoolDatabaseManager.Database
 {
     public static class DatabaseManager
     {
-        // =========================================================
-        // === STUDENTS
-        // =========================================================
+        #region Students
         public static void AddStudent(Student student)
         {
             DatabaseHelper.Write
@@ -19,7 +17,7 @@ namespace SchoolDatabaseManager.Database
                 """,
                 command => DatabaseHelper.WriteStudent(command, student)
             );
-            Console.WriteLine($"Added Student {student.Name} to the database");
+            Console.WriteLine($"Added Student {student.Name} to the database.");
         }
 
         public static void RemoveStudent(int studentId)
@@ -77,9 +75,9 @@ namespace SchoolDatabaseManager.Database
             );
         }
 
-        // =========================================================
-        // === TEACHERS
-        // =========================================================
+        #endregion
+
+        #region Teachers
 
         public static void AddTeacher(Teacher teacher)
         {
@@ -91,7 +89,7 @@ namespace SchoolDatabaseManager.Database
                 """,
                 command => DatabaseHelper.WriteTeacher(command, teacher)
             );
-            Console.WriteLine($"Added Teacher {teacher.Name} to the database");
+            Console.WriteLine($"Added Teacher {teacher.Name} to the database.");
         }
 
         public static void RemoveTeacher(int teacherId)
@@ -149,9 +147,9 @@ namespace SchoolDatabaseManager.Database
             );
         }
 
-        // =========================================================
-        // === GROUPS
-        // =========================================================
+        #endregion
+
+        #region Groups
 
         public static void AddGroup(Group group)
         {
@@ -187,5 +185,7 @@ namespace SchoolDatabaseManager.Database
                 DatabaseHelper.ReadGroup
             );
         }
+
+        #endregion
     }
 }
