@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace SchoolDatabaseManager.Classes.Models
+namespace SchoolDatabaseManager.Classes
 {
     public class Student
     {

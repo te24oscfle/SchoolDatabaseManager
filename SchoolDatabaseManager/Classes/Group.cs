@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SchoolDatabaseManager.Classes.Models
+namespace SchoolDatabaseManager.Classes
 {
     public class Group
     {

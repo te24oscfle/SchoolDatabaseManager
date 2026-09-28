@@ -1,4 +1,4 @@
-﻿using SchoolDatabaseManager.Classes.Models;
+﻿using SchoolDatabaseManager.Classes;
 using SchoolDatabaseManager.Database;
 
 namespace SchoolDatabaseManager.Commands
