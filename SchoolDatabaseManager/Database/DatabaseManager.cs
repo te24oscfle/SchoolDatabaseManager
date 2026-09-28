@@ -1,6 +1,4 @@
 ﻿using SchoolDatabaseManager.Classes.Models;
-using SchoolDatabaseManager.Helpers;
-using Group = SchoolDatabaseManager.Classes.Models.Group;
 
 namespace SchoolDatabaseManager.Database
 {
@@ -9,7 +7,7 @@ namespace SchoolDatabaseManager.Database
         #region Students
         public static void AddStudent(Student student)
         {
-            DatabaseHelper.Write
+            bool success = DatabaseHelper.Write
             (
                 """
                 INSERT INTO students
@@ -17,12 +15,13 @@ namespace SchoolDatabaseManager.Database
                 """,
                 command => DatabaseHelper.WriteStudent(command, student)
             );
-            Console.WriteLine($"Added Student {student.Name} to the database.");
+            if (success)
+                Console.WriteLine($"Added Student {student.Name} to the database.");
         }
 
         public static void RemoveStudent(int studentId)
         {
-            DatabaseHelper.Write
+            bool success = DatabaseHelper.Write
             (
                 """
                 DELETE FROM students
@@ -30,12 +29,13 @@ namespace SchoolDatabaseManager.Database
                 """,
                 command => command.Parameters.AddWithValue("student_id", studentId)
             );
-            Console.WriteLine($"Removed Student with ID={studentId} from the database.");
+            if (success)
+                Console.WriteLine($"Removed Student with ID={studentId} from the database.");
         }
 
         public static void AssignStudentToGroup(int studentId, int groupId)
         {
-            DatabaseHelper.Write
+            bool success = DatabaseHelper.Write
             (
                 """
                 UPDATE students
@@ -48,7 +48,8 @@ namespace SchoolDatabaseManager.Database
                     command.Parameters.AddWithValue("student_id", studentId);
                 }
             );
-            Console.WriteLine($"Assigned Student with ID={studentId} to Group with ID={groupId}.");
+            if (success)
+                Console.WriteLine($"Assigned Student with ID={studentId} to Group with ID={groupId}.");
         }
 
         public static List<Student> GetStudents()
@@ -81,7 +82,7 @@ namespace SchoolDatabaseManager.Database
 
         public static void AddTeacher(Teacher teacher)
         {
-            DatabaseHelper.Write
+            bool success = DatabaseHelper.Write
             (
                 """
                 INSERT INTO teachers
@@ -89,12 +90,13 @@ namespace SchoolDatabaseManager.Database
                 """,
                 command => DatabaseHelper.WriteTeacher(command, teacher)
             );
-            Console.WriteLine($"Added Teacher {teacher.Name} to the database.");
+            if (success)
+                Console.WriteLine($"Added Teacher {teacher.Name} to the database.");
         }
 
         public static void RemoveTeacher(int teacherId)
         {
-            DatabaseHelper.Write
+            bool success = DatabaseHelper.Write
             (
                 """
                 DELETE FROM teachers
@@ -102,12 +104,13 @@ namespace SchoolDatabaseManager.Database
                 """,
                 command => command.Parameters.AddWithValue("teacher_id", teacherId)
             );
-            Console.WriteLine($"Removed Teacher with ID={teacherId} from the database.");
+            if (success)
+                Console.WriteLine($"Removed Teacher with ID={teacherId} from the database.");
         }
 
         public static void AssignTeacherToGroup(int teacherId, int groupId)
         {
-            DatabaseHelper.Write
+            bool success = DatabaseHelper.Write
             (
                 """
                 UPDATE teachers
@@ -120,7 +123,8 @@ namespace SchoolDatabaseManager.Database
                     command.Parameters.AddWithValue("teacher_id", teacherId);
                 }
             );
-            Console.WriteLine($"Assigned Teacher with ID={teacherId} to Group with ID={groupId}.");
+            if (success)
+                Console.WriteLine($"Assigned Teacher with ID={teacherId} to Group with ID={groupId}.");
         }
 
         public static List<Teacher> GetTeachers()
@@ -153,26 +157,28 @@ namespace SchoolDatabaseManager.Database
 
         public static void AddGroup(Group group)
         {
-            DatabaseHelper.Write(
+            bool success = DatabaseHelper.Write(
                 """
                 INSERT INTO groups (name)
                 VALUES (@name)
                 """,
                 command => command.Parameters.AddWithValue("name", group.Name)
             );
-            Console.WriteLine($"Added Group {group.Name} to the database.");
+            if (success)
+                Console.WriteLine($"Added Group {group.Name} to the database.");
         }
 
         public static void RemoveGroup(int groupId)
         {
-            DatabaseHelper.Write(
+            bool success = DatabaseHelper.Write(
                 """
                 DELETE FROM groups
                 WHERE group_id = @group_id
                 """,
                 command => command.Parameters.AddWithValue("group_id", groupId)
             );
-            Console.WriteLine($"Added Group with ID={groupId} from the database.");
+            if (success)
+                Console.WriteLine($"Removed Group with ID={groupId} from the database.");
         }
 
         public static List<Group> GetGroups()

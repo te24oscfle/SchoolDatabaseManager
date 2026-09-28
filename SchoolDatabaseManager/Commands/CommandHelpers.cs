@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SchoolDatabaseManager.Helpers
+namespace SchoolDatabaseManager.Commands
 {
     public static class CommandHelpers
     {

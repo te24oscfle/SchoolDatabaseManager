@@ -132,7 +132,7 @@ namespace SchoolDatabaseManager.Database
             return list;
         }
 
-        public static void Write(string sqlCommand, Action<SqliteCommand>? configureCommand = null)
+        public static bool Write(string sqlCommand, Action<SqliteCommand>? configureCommand = null)
         {
             // Check if database is initilized
             if (!isDatabaseInitilized)
@@ -149,11 +149,13 @@ namespace SchoolDatabaseManager.Database
             try
             {
                 command.ExecuteNonQuery();
+                return true;
             }
             catch (Exception exception)
             {
-                Console.WriteLine($"Error when executing following SQL command: {command.CommandText}");
-                Console.WriteLine(exception);
+                Console.WriteLine($"Error when executing following SQL command:\n{command.CommandText}");
+                Console.WriteLine($"\n{exception}\n");
+                return false;
             }
             
         }

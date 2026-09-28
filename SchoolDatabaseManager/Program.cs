@@ -1,9 +1,8 @@
 ﻿
-
-using Npgsql;
-using SchoolDatabaseManager.Classes;
 using SchoolDatabaseManager.Classes.Models;
+using SchoolDatabaseManager.Commands;
 using SchoolDatabaseManager.Database;
+using System.Runtime.InteropServices;
 
 namespace SchoolDatabaseManager
 {
@@ -51,7 +50,9 @@ namespace SchoolDatabaseManager
         static void Main(string[] args)
         {
             DatabaseHelper.InitilizeDatabase();
-            
+
+            Dictionary<string, Action<string[]>> commands = CommandManager.GetCommands();
+
             bool shouldExit = false;
             while (!shouldExit)
             {
@@ -61,147 +62,150 @@ namespace SchoolDatabaseManager
                     continue;
 
                 string[] split = input.Split(" ");
-                string command = split[0];
+                string commandName = split[0];
                 string[] arguments = split.Skip(1).ToArray();
 
-                string name = GetStringFromArguments(arguments);
-
-                // primaryId and secondaryId was previously student/teacherId and groupId respectively. '
-                // I moved the int.TryParse calls out of the switch cases to refactorise the code.
-                // This system assums groupId is always the second argument, but some command take a group id as the first command.
-                
-                // To solve this, they are renamed to primaryId and secondaryId.
-
-                // Checks if arguments is greater than 0. If it is, it will try to parse the int to a temp variable
-                // If the temp variable exists, primaryId will be equal to that. Otherwise, it is set to 0.
-                int primaryId = arguments.Length > 0 && int.TryParse(arguments[0], out int parsedPrimaryId)
-                    ? parsedPrimaryId
-                    : 0;
-
-                // Same thing.
-                int secondaryId = arguments.Length > 1 && int.TryParse(arguments[1], out int parsedSecondaryId)
-                    ? parsedSecondaryId
-                    : 0;
-
-                switch (command)
+                if (commandName == "exit")
                 {
-                    // =============================
-                    // === Students
-                    // =============================
-                    case "addStudent":
-                    {
-                        if (string.IsNullOrEmpty(name))
-                        {
-                            Console.WriteLine("Invalid name.");
-                            continue;
-                        }
-                        DatabaseManager.AddStudent(new Student(name));
-                        break;
-                    }
-
-                    case "removeStudent":
-                    {
-                        DatabaseManager.RemoveStudent(primaryId);
-                        break;
-                    }
-
-                    case "getStudents":
-                    {
-                        List<Student> students = DatabaseManager.GetStudents();
-                        PrintStudents(students);
-                        break;
-                    }
-
-                    case "getStudentsInGroup":
-                    {
-                        List<Student> students = DatabaseManager.GetStudentsInGroup(primaryId);
-                        PrintStudents(students);
-                        break;
-                    }
-
-                    case "assignStudentToGroup":
-                    {
-                        DatabaseManager.AssignStudentToGroup(primaryId, secondaryId);
-                        break;
-                    }
-
-                    // =============================
-                    // === Teachers
-                    // =============================
-                    case "addTeacher":
-                    {
-                        if (string.IsNullOrEmpty(name))
-                        {
-                            Console.WriteLine("Invalid name.");
-                            continue;
-                        }
-                        DatabaseManager.AddTeacher(new Teacher(name));
-                        break;
-                    }
-
-                    case "removeTeacher":
-                    {
-                        DatabaseManager.RemoveTeacher(primaryId);
-                        break;
-                    }
-
-                    case "assignTeacherToGroup":
-                    {
-                        DatabaseManager.AssignTeacherToGroup(primaryId, secondaryId);
-                        break;
-                    }
-
-                    case "getTeachers":
-                    {
-                        List<Teacher> teachers = DatabaseManager.GetTeachers();
-                        PrintTeachers(teachers);
-                        break;
-                    }
-
-                    case "getTeachersInGroup":
-                    {
-                        List<Teacher> teachers = DatabaseManager.GetTeachersInGroup(primaryId);
-                        PrintTeachers(teachers);
-                        break;
-                    }
-
-                    // =============================
-                    // === Groups
-                    // =============================
-                    case "addGroup":
-                    {
-                        if (string.IsNullOrEmpty(name))
-                        {
-                            Console.WriteLine("Invalid name.");
-                            continue;
-                        }
-                        DatabaseManager.AddGroup(new Group(name));
-                        break;
-                    }
-                       
-                    case "getGroups":
-                    {
-                        List<Group> groups = DatabaseManager.GetGroups();
-                        PrintGroups(groups);
-                        break;
-                    }
-
-                    // =============================
-                    // === Misc
-                    // =============================
-
-                    case "exit":
-                    {
-                        shouldExit = true;
-                        break;
-                    }
-
-                    default:
-                    {
-                        Console.WriteLine("Invalid command.");
-                        break;
-                    }   
+                    shouldExit = true;
+                    continue;
                 }
+
+                if (!commands.TryGetValue(commandName, out Action<string[]>? command))
+                {
+                    Console.WriteLine("Invalid command.");
+                    continue;
+                }
+
+                try
+                {
+                    command(arguments);
+                } 
+                catch (Exception exception)
+                {
+                    Console.WriteLine($"Error when executing command {commandName}");
+                    Console.WriteLine(exception);
+                }
+                
+                //switch (command)
+                //{
+                //    // =============================
+                //    // === Students
+                //    // =============================
+                //    case "addStudent":
+                //    {
+                //        if (string.IsNullOrEmpty(name))
+                //        {
+                //            Console.WriteLine("Invalid name.");
+                //            continue;
+                //        }
+                //        DatabaseManager.AddStudent(new Student(name));
+                //        break;
+                //    }
+
+                //    case "removeStudent":
+                //    {
+                //        DatabaseManager.RemoveStudent(primaryId);
+                //        break;
+                //    }
+
+                //    case "getStudents":
+                //    {
+                //        List<Student> students = DatabaseManager.GetStudents();
+                //        PrintStudents(students);
+                //        break;
+                //    }
+
+                //    case "getStudentsInGroup":
+                //    {
+                //        List<Student> students = DatabaseManager.GetStudentsInGroup(primaryId);
+                //        PrintStudents(students);
+                //        break;
+                //    }
+
+                //    case "assignStudentToGroup":
+                //    {
+                //        DatabaseManager.AssignStudentToGroup(primaryId, secondaryId);
+                //        break;
+                //    }
+
+                //    // =============================
+                //    // === Teachers
+                //    // =============================
+                //    case "addTeacher":
+                //    {
+                //        if (string.IsNullOrEmpty(name))
+                //        {
+                //            Console.WriteLine("Invalid name.");
+                //            continue;
+                //        }
+                //        DatabaseManager.AddTeacher(new Teacher(name));
+                //        break;
+                //    }
+
+                //    case "removeTeacher":
+                //    {
+                //        DatabaseManager.RemoveTeacher(primaryId);
+                //        break;
+                //    }
+
+                //    case "assignTeacherToGroup":
+                //    {
+                //        DatabaseManager.AssignTeacherToGroup(primaryId, secondaryId);
+                //        break;
+                //    }
+
+                //    case "getTeachers":
+                //    {
+                //        List<Teacher> teachers = DatabaseManager.GetTeachers();
+                //        PrintTeachers(teachers);
+                //        break;
+                //    }
+
+                //    case "getTeachersInGroup":
+                //    {
+                //        List<Teacher> teachers = DatabaseManager.GetTeachersInGroup(primaryId);
+                //        PrintTeachers(teachers);
+                //        break;
+                //    }
+
+                //    // =============================
+                //    // === Groups
+                //    // =============================
+                //    case "addGroup":
+                //    {
+                //        if (string.IsNullOrEmpty(name))
+                //        {
+                //            Console.WriteLine("Invalid name.");
+                //            continue;
+                //        }
+                //        DatabaseManager.AddGroup(new Group(name));
+                //        break;
+                //    }
+                       
+                //    case "getGroups":
+                //    {
+                //        List<Group> groups = DatabaseManager.GetGroups();
+                //        PrintGroups(groups);
+                //        break;
+                //    }
+
+                //    // =============================
+                //    // === Misc
+                //    // =============================
+
+                //    case "exit":
+                //    {
+                //        shouldExit = true;
+                //        break;
+                //    }
+
+                //    default:
+                //    {
+                //        Console.WriteLine("Invalid command.");
+                //        break;
+                //    }   
+                //}
             }
         }
     }
