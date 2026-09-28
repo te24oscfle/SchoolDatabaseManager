@@ -167,6 +167,7 @@ namespace SchoolDatabaseManager.Database
             
         }
 
+        // This function is obsolete and is never used anywhere in this project, but I'll leave it in anyway.
         public static List<FailedItem<T>> WriteFromList<T>(List<T> list, string sqlCommand, Action<SqliteCommand, T> configureCommand)
         {
             // Check if database is initilized
@@ -223,6 +224,12 @@ namespace SchoolDatabaseManager.Database
         public static void WriteStudent(SqliteCommand command, Student student)
         {
             // Add values to command paramaters
+
+            // AddWithValue(paramater, value) replaces @paramater with given value in a SQL command.
+            // Example: SELECT * FROM students WHERE name = @name
+            // AddWithValue("name", student.Name) would modify the command to:
+            // SELECT * FROM students WHERE name = [whatever the students name is]
+
             command.Parameters.AddWithValue("name", student.Name);
             command.Parameters.AddWithValue("student_email", student.StudentEmail);
             command.Parameters.AddWithValue("group_id", student.GroupId);
@@ -248,7 +255,7 @@ namespace SchoolDatabaseManager.Database
 
         public static void WriteTeacher(SqliteCommand command, Teacher teacher)
         {
-            // Add values to command paramaters
+            // Add values to command paramaters.
             command.Parameters.AddWithValue("name", teacher.Name);
             command.Parameters.AddWithValue("teacher_email", teacher.TeacherEmail);
             command.Parameters.AddWithValue("group_id", teacher.GroupId);
