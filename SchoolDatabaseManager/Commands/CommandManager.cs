@@ -24,7 +24,9 @@ namespace SchoolDatabaseManager.Commands
                 {"getTeachersInGroup", GetTeachersInGroup },
 
                 // Group Commands
-
+                {"addGroup", AddGroup },
+                {"removeGroup", RemoveGroup },
+                {"getGroups", GetGroups }
             };
         }
 
@@ -158,6 +160,39 @@ namespace SchoolDatabaseManager.Commands
 
             List<Teacher> teachers = DatabaseManager.GetTeachersInGroup(groupId);
             CommandHelpers.PrintTeachers(teachers);
+        }
+
+        #endregion
+
+        #region Group Commands
+
+        public static void AddGroup(string[] arguments)
+        {
+            string name = string.Join(" ", arguments);
+            if (string.IsNullOrEmpty(name))
+            {
+                Console.WriteLine("No name was provided.");
+                return;
+            }
+            DatabaseManager.AddGroup(new Group(name));
+        }
+
+        public static void RemoveGroup(string[] arguments)
+        {
+            if (arguments.Length == 0)
+            {
+                Console.WriteLine("No Group ID was provided.");
+                return;
+            }
+
+            int.TryParse(arguments[0], out int groupId);
+            DatabaseManager.RemoveGroup(groupId);
+        }
+
+        public static void GetGroups(string[] arguments)
+        {
+            List<Group> groups = DatabaseManager.GetGroups();
+            CommandHelpers.PrintGroups(groups);
         }
 
         #endregion

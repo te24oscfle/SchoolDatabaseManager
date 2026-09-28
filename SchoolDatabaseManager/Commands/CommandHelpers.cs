@@ -30,5 +30,15 @@ namespace SchoolDatabaseManager.Commands
                 Console.Write("\n");
             }
         }
+
+        public static void PrintGroups(List<Group> groups)
+        {
+            foreach (Group group in groups)
+            {
+                Console.WriteLine(group.Name);
+                Console.WriteLine($"    ID={group.Id}");
+                Console.Write("\n");
+            }
+        }
     }
 }
