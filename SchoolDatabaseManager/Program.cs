@@ -1,9 +1,9 @@
 ﻿
 
 using Npgsql;
-using SchoolDatabaseManager.Helpers;
 using SchoolDatabaseManager.Classes;
 using SchoolDatabaseManager.Classes.Models;
+using SchoolDatabaseManager.Database;
 
 namespace SchoolDatabaseManager
 {

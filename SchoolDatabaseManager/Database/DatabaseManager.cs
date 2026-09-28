@@ -5,7 +5,7 @@ using SchoolDatabaseManager.Helpers;
 using System.Text.RegularExpressions;
 using Group = SchoolDatabaseManager.Classes.Models.Group;
 
-namespace SchoolDatabaseManager.Helpers
+namespace SchoolDatabaseManager.Database
 {
     public static class DatabaseManager
     {
