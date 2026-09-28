@@ -1,86 +1,51 @@
-﻿using Npgsql;
-using SchoolDatabaseManager.Classes;
-using SchoolDatabaseManager.Classes.Models;
+﻿using SchoolDatabaseManager.Classes.Models;
 using SchoolDatabaseManager.Helpers;
-using System.Text.RegularExpressions;
 using Group = SchoolDatabaseManager.Classes.Models.Group;
 
 namespace SchoolDatabaseManager.Database
 {
     public static class DatabaseManager
     {
-        private static NpgsqlConnection GetConnection()
-        {
-            string connectionString = ConfigurationHelper.GetConnectionString("DefaultConnection");
-            var connection = new NpgsqlConnection(connectionString);
-            connection.Open();
-
-            return connection;
-        }
-
         // =========================================================
         // === STUDENTS
         // =========================================================
         public static void AddStudent(Student student)
         {
-            // Open a connection
-            using var connection = GetConnection();
-
-            using NpgsqlCommand command = new NpgsqlCommand(
+            DatabaseHelper.Write
+            (
                 """
-                INSERT INTO students (name, student_email)
-                VALUES (@name, @studentEmail)
-                RETURNING id
+                INSERT INTO students
+                VALUES (name, student_email, group_id
                 """,
-                connection
+                command => DatabaseHelper.WriteStudent(command, student)
             );
-            
-            // Insert values into command
-            command.Parameters.AddWithValue("name", student.Name);
-            command.Parameters.AddWithValue("studentEmail", student.StudentEmail);
-
-            // Execute the command and get the ID. If no valid ID exists, the student is giving a temp -1 id.
-            student.Id = command.ExecuteScalar() is int id ? id : -1;
-
-            Console.WriteLine($"Added Student {student.Name} to the database. (ID={student.Id})");
+            Console.WriteLine($"Added Student {student.Name} to the database");
         }
 
         public static void RemoveStudent(int studentId)
         {
-            // Open a connection
-            using var connection = GetConnection();
-
-            using NpgsqlCommand command = new NpgsqlCommand(
+            DatabaseHelper.Write
+            (
                 """
                 DELETE FROM students
-                WHERE id = @student_id;
+                WHERE student_id = @student_id
                 """,
-                connection
+                command => command.Parameters.AddWithValue("student_id", studentId)
             );
-
-            command.Parameters.AddWithValue("student_id", studentId);
-
-            command.ExecuteNonQuery();
             Console.WriteLine($"Removed Student with ID={studentId} from the database.");
         }
 
         public static void AssignStudentToGroup(int studentId, int groupId)
         {
-            using var connection = GetConnection();
-
-            using NpgsqlCommand command = new NpgsqlCommand(
-                $"""
+            DatabaseHelper.Write
+            (
+                """
                 UPDATE students
-                SET group_id = @groupId
-                WHERE id = @studentId
+                SET group_id = @group_id
+                VALUES (name, student_email, group_id
                 """,
-                connection
+                command => DatabaseHelper.WriteStudent(command, student)
             );
-
-            command.Parameters.AddWithValue("groupId", groupId);
-            command.Parameters.AddWithValue("studentId", studentId);
-
-            command.ExecuteNonQuery();
 
             Console.WriteLine($"Assigned Student with ID={studentId} to Group with ID={groupId}.");
         }
