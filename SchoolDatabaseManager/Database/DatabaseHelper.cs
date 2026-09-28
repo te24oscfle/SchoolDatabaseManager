@@ -91,13 +91,13 @@ namespace SchoolDatabaseManager.Database
             
             // Open connection and create command
             using SqliteConnection connection = GetConnection();
-            using SqliteCommand command = new SqliteCommand(sqlCommand);
+            using SqliteCommand command = new SqliteCommand(sqlCommand, connection);
 
             // Invoke the configureCommand action only if it was provided
-            configureCommand!.Invoke(command);
+            configureCommand?.Invoke(command);
 
             // Read data
-            SqliteDataReader reader = command.ExecuteReader();
+            using SqliteDataReader reader = command.ExecuteReader();
             
             // No data was found
             if (!reader.Read())
@@ -115,13 +115,13 @@ namespace SchoolDatabaseManager.Database
 
             // Open connection and create command
             using SqliteConnection connection = GetConnection();
-            using SqliteCommand command = new SqliteCommand(sqlCommand);
+            using SqliteCommand command = new SqliteCommand(sqlCommand, connection);
 
             // Invoke the configureCommand action only if it was provided
-            configureCommand!.Invoke(command);
+            configureCommand?.Invoke(command);
 
             // Read data
-            SqliteDataReader reader = command.ExecuteReader();
+            using SqliteDataReader reader = command.ExecuteReader();
 
             List<T> list = new List<T>();
             while (reader.Read())
@@ -140,10 +140,10 @@ namespace SchoolDatabaseManager.Database
 
             // Open connection and create command
             using SqliteConnection connection = GetConnection();
-            using SqliteCommand command = new SqliteCommand(sqlCommand);
+            using SqliteCommand command = new SqliteCommand(sqlCommand, connection);
 
             // Invoke the configureCommand action only if it was provided
-            configureCommand!.Invoke(command);
+            configureCommand?.Invoke(command);
 
             // Write data
             command.ExecuteNonQuery();
@@ -157,7 +157,7 @@ namespace SchoolDatabaseManager.Database
 
             // Open connection and create command
             using SqliteConnection connection = GetConnection();
-            using SqliteCommand command = new SqliteCommand(sqlCommand);
+            using SqliteCommand command = new SqliteCommand(sqlCommand, connection);
 
             List<FailedItem<T>> failedItems = new List<FailedItem<T>>();
             foreach(T item in list)
