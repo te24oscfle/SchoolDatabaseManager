@@ -7,12 +7,12 @@ namespace SchoolDatabaseManager.Database
         T Item,
         Exception Exception
     );
-        
     
     public static class DatabaseHelper
     {
         private static string databaseFilePath = "Database/database.db";
         private static string connectionString = $"DataSource={databaseFilePath}";
+        private static bool isDatabaseInitilized = false;
         
         private static SqliteConnection GetConnection()
         {
@@ -21,10 +21,69 @@ namespace SchoolDatabaseManager.Database
             return connection;
         }
 
+        public static void InitilizeDatabase()
+        {
+            // Check if database is already initilized
+            if (isDatabaseInitilized)
+                return;
+            
+            // Open connection
+            using var connection = GetConnection();
+
+            List<SqliteCommand> commands = new List<SqliteCommand>
+            {
+                // Student table command
+                new SqliteCommand(
+                    """
+                    CREATE TABLE IF NOT EXISTS students
+                    (
+                        id INTEGER PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        student_email TEXT NOT NULL,
+                        group_id INTEGER
+                    )
+                    """, connection),
+
+                // Teacher table command
+                new SqliteCommand(
+                    """
+                    CREATE TABLE IF NOT EXISTS teachers
+                    (
+                        id INTEGER PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        teacher_email TEXT NOT NULL,
+                        group_id INTEGER
+                    )
+                    """, connection),
+
+                // Group table command
+                new SqliteCommand(
+                    """
+                    CREATE TABLE IF NOT EXISTS groups
+                    (
+                        id INTEGER PRIMARY KEY,
+                        name TEXT NOT NULL
+                    )
+                    """, connection)
+            };
+
+            foreach(SqliteCommand command in commands)
+            {
+                command.ExecuteNonQuery();
+                command.Dispose();
+            }
+
+            isDatabaseInitilized = true;
+        }
+
         #region General Reader/Writer functions
 
         public static T? Read<T>(string sqlCommand, Func<SqliteDataReader, T> mapper, Action<SqliteCommand>? configureCommand=null)
         {
+            // Check if database is initilized
+            if (!isDatabaseInitilized)
+                throw new Exception("Database must be initilized before this function can be called");
+            
             // Open connection and create command
             using SqliteConnection connection = GetConnection();
             using SqliteCommand command = new SqliteCommand(sqlCommand);
@@ -45,6 +104,10 @@ namespace SchoolDatabaseManager.Database
 
         public static List<T> ReadToList<T>(string sqlCommand, Func<SqliteDataReader, T> mapper, Action<SqliteCommand>? configureCommand = null)
         {
+            // Check if database is initilized
+            if (!isDatabaseInitilized)
+                throw new Exception("Database must be initilized before this function can be called");
+
             // Open connection and create command
             using SqliteConnection connection = GetConnection();
             using SqliteCommand command = new SqliteCommand(sqlCommand);
@@ -66,6 +129,10 @@ namespace SchoolDatabaseManager.Database
 
         public static void Write(string sqlCommand, Action<SqliteCommand>? configureCommand = null)
         {
+            // Check if database is initilized
+            if (!isDatabaseInitilized)
+                throw new Exception("Database must be initilized before this function can be called");
+
             // Open connection and create command
             using SqliteConnection connection = GetConnection();
             using SqliteCommand command = new SqliteCommand(sqlCommand);
@@ -79,6 +146,10 @@ namespace SchoolDatabaseManager.Database
 
         public static List<FailedItem<T>> WriteFromList<T>(List<T> list, string sqlCommand, Action<SqliteCommand, T> configureCommand)
         {
+            // Check if database is initilized
+            if (!isDatabaseInitilized)
+                throw new Exception("Database must be initilized before this function can be called");
+
             // Open connection and create command
             using SqliteConnection connection = GetConnection();
             using SqliteCommand command = new SqliteCommand(sqlCommand);
