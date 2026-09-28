@@ -29,6 +29,11 @@ namespace SchoolDatabaseManager.Commands
         public static void AddStudent(string[] arguments)
         {
             string name = string.Join(" ", arguments);
+            if (string.IsNullOrEmpty(name))
+            {
+                Console.WriteLine("No name was provided.");
+                return;
+            }
             DatabaseManager.AddStudent(new Student(name));
         }
 
