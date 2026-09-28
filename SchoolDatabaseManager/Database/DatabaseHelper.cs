@@ -10,12 +10,16 @@ namespace SchoolDatabaseManager.Database
     
     public static class DatabaseHelper
     {
-        private static string databaseFilePath = "Database/database.db";
-        private static string connectionString = $"DataSource={databaseFilePath}";
+        private static string databasePath = "Database/database.db";
+        private static string connectionString = $"Data Source={databasePath}";
         private static bool isDatabaseInitilized = false;
         
         private static SqliteConnection GetConnection()
         {
+            // Create Database directory if it doesn't already exist
+            Directory.CreateDirectory("Database");
+
+            // Create and open connection
             SqliteConnection connection = new SqliteConnection(connectionString);
             connection.Open();
             return connection;
@@ -69,6 +73,7 @@ namespace SchoolDatabaseManager.Database
 
             foreach(SqliteCommand command in commands)
             {
+                Console.WriteLine($"\nExecuting command: {command.CommandText}");
                 command.ExecuteNonQuery();
                 command.Dispose();
             }
@@ -121,7 +126,7 @@ namespace SchoolDatabaseManager.Database
             List<T> list = new List<T>();
             while (reader.Read())
             {
-                list.Add(mapper(reader)));
+                list.Add(mapper(reader));
             }
 
             return list;

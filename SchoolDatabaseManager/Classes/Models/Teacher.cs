@@ -16,9 +16,8 @@ namespace SchoolDatabaseManager.Classes.Models
         {
             Id = -1;
             Name = name;
+            TeacherEmail = GetTeacherEmail();
             GroupId = -1;
-
-            GenerateTeacherEmail();
         }
 
         public Teacher(int id, string name, string teacherEmail, int groupId)
@@ -29,13 +28,19 @@ namespace SchoolDatabaseManager.Classes.Models
             GroupId = groupId;
         }
 
-        public string GenerateTeacherEmail()
+        private string GetTeacherEmail()
         {
             string processedName = Name.ToLower()
                 .Replace("å", "a")
                 .Replace("ä", "a")
                 .Replace("ö", "o"); // I should be doing something more robust here but this works
-            return $"{Regex.Replace(processedName, @"\s+", ".").ToLower()}@falufri.se";
+            string teacherEmail = $"{Regex.Replace(processedName, @"\s+", ".").ToLower()}@falufri.se";
+            return teacherEmail;
+        }
+        
+        public void GenerateTeacherEmail()
+        {
+            TeacherEmail = GetTeacherEmail();
         }
 
         public override string ToString()

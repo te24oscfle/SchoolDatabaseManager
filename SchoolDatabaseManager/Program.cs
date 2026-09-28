@@ -50,6 +50,8 @@ namespace SchoolDatabaseManager
 
         static void Main(string[] args)
         {
+            DatabaseHelper.InitilizeDatabase();
+            
             bool shouldExit = false;
             while (!shouldExit)
             {
@@ -80,7 +82,7 @@ namespace SchoolDatabaseManager
                 int secondaryId = arguments.Length > 1 && int.TryParse(arguments[1], out int parsedSecondaryId)
                     ? parsedSecondaryId
                     : 0;
-                
+
                 switch (command)
                 {
                     // =============================
