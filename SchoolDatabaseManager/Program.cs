@@ -1,8 +1,5 @@
-﻿
-using SchoolDatabaseManager.Classes.Models;
-using SchoolDatabaseManager.Commands;
+﻿using SchoolDatabaseManager.Commands;
 using SchoolDatabaseManager.Database;
-using System.Runtime.InteropServices;
 
 namespace SchoolDatabaseManager
 {

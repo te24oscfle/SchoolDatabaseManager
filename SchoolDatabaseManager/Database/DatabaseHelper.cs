@@ -1,6 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
 using SchoolDatabaseManager.Classes;
-using System.Data.Common;
 
 namespace SchoolDatabaseManager.Database
 {
