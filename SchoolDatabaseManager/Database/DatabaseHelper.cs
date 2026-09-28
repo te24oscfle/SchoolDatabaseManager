@@ -146,7 +146,16 @@ namespace SchoolDatabaseManager.Database
             configureCommand?.Invoke(command);
 
             // Write data
-            command.ExecuteNonQuery();
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine($"Error when executing following SQL command: {command.CommandText}");
+                Console.WriteLine(exception);
+            }
+            
         }
 
         public static List<FailedItem<T>> WriteFromList<T>(List<T> list, string sqlCommand, Action<SqliteCommand, T> configureCommand)

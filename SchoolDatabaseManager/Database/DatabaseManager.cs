@@ -155,53 +155,37 @@ namespace SchoolDatabaseManager.Database
 
         public static void AddGroup(Group group)
         {
-            // Get command
-            using var connection = GetConnection();
-
-            using var command = new NpgsqlCommand(
+            DatabaseHelper.Write(
                 """
-                    INSERT INTO groups (name)
-                    VALUES (@name)
-                    RETURNING id
+                INSERT INTO groups (name)
+                VALUES (@name)
                 """,
-                connection
+                command => command.Parameters.AddWithValue("name", group.Name)
             );
+            Console.WriteLine($"Added Group {group.Name} to the database.");
+        }
 
-            // Insert values into command
-            command.Parameters.AddWithValue("name", group.Name);
-
-            // Execute the command and get the ID. If no valid ID exists, the student is giving a temp -1 id.
-            group.Id = command.ExecuteScalar() is int id ? id : -1;
-
-            Console.WriteLine($"Added Group {group.Name} to the database. (ID={group.Id})");
+        public static void RemoveGroup(int groupId)
+        {
+            DatabaseHelper.Write(
+                """
+                DELETE FROM groups
+                WHERE group_id = @group_id
+                """,
+                command => command.Parameters.AddWithValue("group_id", groupId)
+            );
+            Console.WriteLine($"Added Group with ID={groupId} from the database.");
         }
 
         public static List<Group> GetGroups()
         {
-            using var connection = GetConnection();
-
-            using NpgsqlCommand command = new NpgsqlCommand(
+            return DatabaseHelper.ReadToList(
                 """
                 SELECT * FROM groups
                 ORDER BY id ASC
-                """, connection);
-
-            // Get reader object
-            using NpgsqlDataReader reader = command.ExecuteReader();
-
-            // Read all rows and create students
-            List<Group> groups = new List<Group>();
-            while (reader.Read())
-            {
-                int id = reader.GetInt32(reader.GetOrdinal("id"));
-                string name = reader.GetString(reader.GetOrdinal("name"));
-
-                Group group = new Group(name, id);
-                groups.Add(group);
-            }
-
-            return groups;
+                """,
+                DatabaseHelper.ReadGroup
+            );
         }
-
     }
 }
