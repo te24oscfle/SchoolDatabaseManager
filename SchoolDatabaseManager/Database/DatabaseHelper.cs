@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using SchoolDatabaseManager.Classes.Models;
 
 namespace SchoolDatabaseManager.Database
 {
@@ -102,6 +103,75 @@ namespace SchoolDatabaseManager.Database
             }
 
             return failedItems;
+        }
+
+        #endregion
+
+        #region Class-specific read/write functions
+        public static Student ReadStudent(SqliteDataReader reader)
+        {
+            // Create Student object
+            Student student = new Student
+            (
+                reader.GetInt32(reader.GetOrdinal("id")),
+                reader.GetString(reader.GetOrdinal("name")),
+                reader.IsDBNull(reader.GetOrdinal("student_email")) is false ? reader.GetString(reader.GetOrdinal("student_email")) : "",
+                reader.GetInt32(reader.GetOrdinal("group_id"))
+            );
+
+            // Generate student email if no student email was stored in database
+            if (string.IsNullOrWhiteSpace(student.StudentEmail))
+                student.GenerateStudentEmail();
+
+            return student;
+        }
+
+        public static void WriteStudent(SqliteCommand command, Student student)
+        {
+            // Add values to command paramaters
+            command.Parameters.AddWithValue("name", student.Name);
+            command.Parameters.AddWithValue("student_email", student.StudentEmail);
+            command.Parameters.AddWithValue("group_id", student.GroupId);
+        }
+
+        public static Teacher ReadTeacher(SqliteDataReader reader)
+        {
+            // Create Teacher object
+            Teacher teacher = new Teacher
+            (
+                reader.GetInt32(reader.GetOrdinal("id")),
+                reader.GetString(reader.GetOrdinal("name")),
+                reader.IsDBNull(reader.GetOrdinal("teacher_email")) is false ? reader.GetString(reader.GetOrdinal("teacher_email")) : "",
+                reader.GetInt32(reader.GetOrdinal("group_id"))
+            );
+
+            // Generate teacher email if no teacher email was stored in database
+            if (string.IsNullOrWhiteSpace(teacher.TeacherEmail))
+                teacher.GenerateTeacherEmail();
+
+            return teacher;
+        }
+
+        public static void WriteTeacher(SqliteCommand command, Teacher teacher)
+        {
+            // Add values to command paramaters
+            command.Parameters.AddWithValue("name", teacher.Name);
+            command.Parameters.AddWithValue("teacher_email", teacher.TeacherEmail);
+            command.Parameters.AddWithValue("group_id", teacher.GroupId);
+        }
+
+        public static Group ReadGroup(SqliteDataReader reader)
+        {
+            return new Group
+            (
+                reader.GetString(reader.GetOrdinal("name")),
+                reader.GetInt32(reader.GetOrdinal("id"))
+            );
+        }
+
+        public static void WriteGroup(SqliteCommand command, Group group)
+        {
+            command.Parameters.AddWithValue("name", group.Name);
         }
 
         #endregion

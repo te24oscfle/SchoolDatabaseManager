@@ -16,8 +16,9 @@ namespace SchoolDatabaseManager.Classes.Models
         {
             Id = -1;
             Name = name;
-            TeacherEmail = GetTeacherEmail();
             GroupId = -1;
+
+            GenerateTeacherEmail();
         }
 
         public Teacher(int id, string name, string teacherEmail, int groupId)
@@ -28,7 +29,7 @@ namespace SchoolDatabaseManager.Classes.Models
             GroupId = groupId;
         }
 
-        private string GetTeacherEmail()
+        public string GenerateTeacherEmail()
         {
             string processedName = Name.ToLower()
                 .Replace("å", "a")
