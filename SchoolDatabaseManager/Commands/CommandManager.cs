@@ -17,7 +17,11 @@ namespace SchoolDatabaseManager.Commands
                 {"getStudentsInGroup", GetStudentsInGroup },
 
                 // Teacher Commands
-
+                {"addTeacher", AddTeacher },
+                {"removeTeacher", RemoveTeacher },
+                {"assignTeacherToGroup", AssignTeacherToGroup },
+                {"getTeachers", GetTeachers },
+                {"getTeachersInGroup", GetTeachersInGroup },
 
                 // Group Commands
 
@@ -87,6 +91,73 @@ namespace SchoolDatabaseManager.Commands
 
             List<Student> students = DatabaseManager.GetStudentsInGroup(groupId);
             CommandHelpers.PrintStudents(students);
+        }
+
+        #endregion
+
+        #region Teacher Commands
+
+        public static void AddTeacher(string[] arguments)
+        {
+            string name = string.Join(" ", arguments);
+            if (string.IsNullOrEmpty(name))
+            {
+                Console.WriteLine("No name was provided.");
+                return;
+            }
+            DatabaseManager.AddTeacher(new Teacher(name));
+        }
+
+        public static void RemoveTeacher(string[] arguments)
+        {
+            if (arguments.Length == 0)
+            {
+                Console.WriteLine("No Teacher ID was provided.");
+                return;
+            }
+
+            int.TryParse(arguments[0], out int teacherId);
+            DatabaseManager.RemoveTeacher(teacherId);
+        }
+
+        public static void AssignTeacherToGroup(string[] arguments)
+        {
+            if (arguments.Length < 1)
+            {
+                Console.WriteLine("No Teacher ID was provided.");
+                return;
+            }
+
+            if (arguments.Length < 2)
+            {
+                Console.WriteLine("No Group ID was provided.");
+                return;
+            }
+
+            int.TryParse(arguments[0], out int teacherId);
+            int.TryParse(arguments[1], out int groupId);
+
+            DatabaseManager.AssignTeacherToGroup(teacherId, groupId);
+        }
+
+        public static void GetTeachers(string[] arguments)
+        {
+            List<Teacher> teachers = DatabaseManager.GetTeachers();
+            CommandHelpers.PrintTeachers(teachers);
+        }
+
+        public static void GetTeachersInGroup(string[] arguments)
+        {
+            if (arguments.Length == 0)
+            {
+                Console.WriteLine("No Group ID was provided.");
+                return;
+            }
+
+            int.TryParse(arguments[0], out int groupId);
+
+            List<Teacher> teachers = DatabaseManager.GetTeachersInGroup(groupId);
+            CommandHelpers.PrintTeachers(teachers);
         }
 
         #endregion

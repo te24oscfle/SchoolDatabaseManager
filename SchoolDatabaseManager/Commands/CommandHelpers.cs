@@ -18,5 +18,17 @@ namespace SchoolDatabaseManager.Commands
                 Console.Write("\n");
             }
         }
+
+        public static void PrintTeachers(List<Teacher> teachers)
+        {
+            foreach (Teacher teacher in teachers)
+            {
+                Console.WriteLine(teacher.Name);
+                Console.WriteLine($"    ID={teacher.Id}");
+                Console.WriteLine($"    Teacher Email={teacher.TeacherEmail}");
+                Console.WriteLine($"    Group ID={teacher.GroupId}");
+                Console.Write("\n");
+            }
+        }
     }
 }

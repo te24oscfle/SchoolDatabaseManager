@@ -25,17 +25,7 @@ namespace SchoolDatabaseManager
             }
         }
 
-        static void PrintTeachers(List<Teacher> teachers)
-        {
-            foreach (Teacher teacher in teachers)
-            {
-                Console.WriteLine(teacher.Name);
-                Console.WriteLine($"    ID={teacher.Id}");
-                Console.WriteLine($"    Student Email={teacher.TeacherEmail}");
-                Console.WriteLine($"    Group ID={teacher.GroupId}");
-                Console.Write("\n");
-            }
-        }
+        
 
         static void PrintGroups(List<Group> groups)
         {

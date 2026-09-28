@@ -100,9 +100,9 @@ namespace SchoolDatabaseManager.Database
             (
                 """
                 DELETE FROM teachers
-                WHERE teacher_id = @teacher_id
+                WHERE id = @id
                 """,
-                command => command.Parameters.AddWithValue("teacher_id", teacherId)
+                command => command.Parameters.AddWithValue("id", teacherId)
             );
             if (success)
                 Console.WriteLine($"Removed Teacher with ID={teacherId} from the database.");
@@ -115,12 +115,12 @@ namespace SchoolDatabaseManager.Database
                 """
                 UPDATE teachers
                 SET group_id = @group_id
-                WHERE teacher_id = @teacher_id
+                WHERE id = @id
                 """,
                 command =>
                 {
                     command.Parameters.AddWithValue("group_id", groupId);
-                    command.Parameters.AddWithValue("teacher_id", teacherId);
+                    command.Parameters.AddWithValue("id", teacherId);
                 }
             );
             if (success)
@@ -173,9 +173,9 @@ namespace SchoolDatabaseManager.Database
             bool success = DatabaseHelper.Write(
                 """
                 DELETE FROM groups
-                WHERE group_id = @group_id
+                WHERE id = @id
                 """,
-                command => command.Parameters.AddWithValue("group_id", groupId)
+                command => command.Parameters.AddWithValue("id", groupId)
             );
             if (success)
                 Console.WriteLine($"Removed Group with ID={groupId} from the database.");
